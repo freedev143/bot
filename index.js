@@ -280,7 +280,7 @@
     if (message.content.startsWith("!stats")) {
       if (targetId === "1510663071109218315") {
         const embed1 = new EmbedBuilder()
-          .setColor(0x000BB8)
+          .setColor(0x04010A)
           .setTitle(`— <a:1463658185901608991:1532590641681404035>INJURIES STATS —`)
           .setThumbnail(targetUser.displayAvatarURL({ dynamic: true }))
           .setDescription(
@@ -296,7 +296,7 @@
           .setFooter({ text: `STERAX • Requested by ${message.author.username}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) });
 
         const embed2 = new EmbedBuilder()
-          .setColor(0x000BB8)
+          .setColor(0x04010A)
           .setImage("https://i.imgur.com/l6IkrrC.gif")
 
         await message.channel.send({
@@ -328,7 +328,7 @@
         const totalRobux = totalHits.Balance || normal.Highest?.Balance || 0;
 
         const embed1 = new EmbedBuilder()
-          .setColor(0x000BB8)
+          .setColor(0x04010A)
           .setTitle(`— <a:1463658185901608991:1532590641681404035>INJURIES STATS —`)
           .setThumbnail(targetUser.displayAvatarURL({ dynamic: true }))
           .setDescription(
@@ -344,7 +344,7 @@
           .setFooter({ text: ` • Requested by ${message.author.username}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) });
 
         const embed2 = new EmbedBuilder()
-          .setColor(0x000BB8)
+          .setColor(0x04010A)
           .setImage("https://i.imgur.com/l6IkrrC.gif");
 
         await message.channel.send({
@@ -371,7 +371,7 @@
         const fetched = await message.channel.messages.fetch({ limit: 100 });
         const deleted = await message.channel.bulkDelete(fetched, true);
         const embed = new EmbedBuilder()
-          .setColor(0x000BB8)
+          .setColor(0x04010A)
           .setTitle("Successfully purged")
           .setDescription(`Deleted ${deleted.size} messages`)
           .setImage(getRandomPurge())
@@ -395,13 +395,13 @@
         return message.reply("<a:737893758644912240:1562935720299991110> U can't fuck nobody everyone broke yo ahh💔🥀");
       }
       
-      await message.channel.send({ embeds: [new EmbedBuilder().setColor(0x00026E).setTitle(` Fucking ${mention.username}`).setDescription(`<@${mention.id}>`).setImage(getRandomFuck()).setFooter({ text: `Requested by ${message.author.username}` })] });
+      await message.channel.send({ embeds: [new EmbedBuilder().setColor(0x04010A).setTitle(` Fucking ${mention.username}`).setDescription(`<@${mention.id}>`).setImage(getRandomFuck()).setFooter({ text: `Requested by ${message.author.username}` })] });
     }
 
     // !unhook
     if (message.content.startsWith("!unhook")) {
       const embed = new EmbedBuilder()
-        .setColor(0xDB0000)
+        .setColor(0x04010A)
         .setTitle(" — <a:why:1545850214064193576> UNHOOK TUTORIAL —")
         .setDescription(`If your beams do not say **"INJURIES"** then you might be losing your beams.\nWatch the video below.`)
         .setImage("https://i.imgur.com/8IgDbSB.gif");
@@ -412,7 +412,7 @@
     // !help
     if (message.content.startsWith("!help")) {
       const embed = new EmbedBuilder()
-        .setColor(0x00026E)
+        .setColor(0x04010A)
         .setTitle(" — <a:why:1545850214064193576> HELP MENU —")
         .setDescription(
           `**Available Commands:**\n\n` +
@@ -443,7 +443,7 @@
       }
 
       const embedMain = new EmbedBuilder()
-        .setColor(0x00026E)
+        .setColor(0x04010A)
         .setTitle(`—— <a:1463658185901608991:1532590641681404035>ꜱᴜᴘᴘᴏʀᴛ  ——`)
         .setDescription(`<a:1463658185901608991:1532590641681404035>ᴘʟᴇᴀꜱᴇ ᴄʜᴏᴏꜱᴇ ᴀ ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ ᴅᴇᴘᴇɴᴅɪɴɢ ᴏɴ ᴡʜᴀᴛ ᴛʏᴘᴇ ᴏꜰ ɪꜱꜱᴜᴇ ʏᴏᴜʀ ᴅᴇᴀʟɪɴɢ ᴡɪᴛʜ`)
         .setImage(TICKET_BANNER);
@@ -476,7 +476,7 @@
 
     // !check
     if (message.content.startsWith("!check")) {
-      const checkingMsg = await message.channel.send({ embeds: [new EmbedBuilder().setColor(0x00026E).setDescription("**Fetching status...**")] });
+      const checkingMsg = await message.channel.send({ embeds: [new EmbedBuilder().setColor(0x04010A).setDescription("**Fetching status...**")] });
 
       try {
         const start = Date.now();
@@ -528,7 +528,7 @@
       // Server welcome
       if (welcomeChannel) {
         const welcomeMain = new EmbedBuilder()
-          .setColor(0x00026E)
+          .setColor(0x04010A)
           .setTitle(` <a:why:1545850214064193576> Welcome to STERAX!!`)
           .setDescription(
             `Read\n` +
@@ -548,7 +548,7 @@
 
       // DM welcome (silent try)
       const dmEmbed = new EmbedBuilder()
-        .setColor(0x00026E)
+        .setColor(0x04010A)
         .setTitle("Welcome to STERAX")
         .setDescription(
           `**${member.user.username}**\n\n` +
@@ -640,7 +640,7 @@
       await interaction.reply({ content: `Ticket created: ${ticketChannel}`, ephemeral: true });
 
       const ticketMain = new EmbedBuilder()
-        .setColor(0x00026E)
+        .setColor(0x04010A)
         .setTitle(`— <a:1463658185901608991:1532590641681404035> TICKET CREATED —`)
         .setDescription(
           `**Welcome** <@${member.id}> !\n\n` +
