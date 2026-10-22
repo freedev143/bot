@@ -103,7 +103,7 @@
       : "No valid entries, so there are no winners.";
     const embed = new EmbedBuilder()
       .setColor(0x000000)
-      .setTitle("🎉 Giveaway Ended")
+      .setTitle("<a:709779986617335879:1562922743912079421> Giveaway Ended")
       .setDescription(`**Prize:** ${giveaway.prize}\n**Winner${winners.length === 1 ? "" : "s"}:** ${winnerText}\n**Entries:** ${giveaway.entrants.size}`)
       .setTimestamp();
 
@@ -115,7 +115,7 @@
         components: [
           new ActionRowBuilder().addComponents(
             new ButtonBuilder().setCustomId(`giveaway_join:${giveawayId}`).setLabel("Giveaway Ended").setStyle(ButtonStyle.Secondary).setDisabled(true),
-            new ButtonBuilder().setCustomId(`giveaway_reroll:${giveawayId}`).setLabel("Reroll Winner").setEmoji("🔄").setStyle(ButtonStyle.Primary)
+            new ButtonBuilder().setCustomId(`giveaway_reroll:${giveawayId}`).setLabel("Reroll Winner").setEmoji("<a:why:1545850214064193576>").setStyle(ButtonStyle.Primary)
           )
         ]
       }).catch(() => null);
@@ -243,7 +243,7 @@
       const endsAt = Date.now() + duration;
       const embed = new EmbedBuilder()
         .setColor(0x000000)
-        .setTitle("🎉 Giveaway")
+        .setTitle("<a:709779986617335879:1562922743912079421> Giveaway")
         .setDescription(`**Prize:** ${prize}\n**Winners:** ${winnerCount}\n**Ends:** <t:${Math.floor(endsAt / 1000)}:R>\n**Entries:** 0\n\nClick the button below to enter!`)
         .setFooter({ text: `Hosted by ${message.author.username}` })
         .setTimestamp(endsAt);
@@ -264,14 +264,15 @@
           new ButtonBuilder()
             .setCustomId(`giveaway_join:${giveawayId}`)
             .setLabel("Enter Giveaway")
-            .setEmoji("🎉")
+            .setEmoji("<a:715186818831614093:1562922713662750760>")
             .setStyle(ButtonStyle.Success)
         )]
       });
       giveaway.messageId = giveawayMessage.id;
       giveaways.set(giveawayId, giveaway);
       scheduleGiveawayEnd(giveaway);
-      await message.reply(`✅ Giveaway started. Message ID: \`${giveawayMessage.id}\`\nEnd early with: \`!giveaway end ${giveawayMessage.id}\``);
+      await message.author.send(`✅ Giveaway started. Message ID: \`${giveawayMessage.id}\`\nEnd early with: \`!giveaway end ${giveawayMessage.id}\``)
+        .catch(() => console.warn(`Could not DM giveaway details to ${message.author.tag}; their DMs may be closed.`));
       return;
     }
 
@@ -588,19 +589,19 @@
 
     if (interaction.isButton() && interaction.customId.startsWith("giveaway_reroll:")) {
       if (!hasStaffPermission(interaction.member)) {
-        return interaction.reply({ content: "❌ Only staff can reroll giveaway winners.", ephemeral: true });
+        return interaction.reply({ content: "<a:engkengot:1541662301306757181> Only staff can reroll giveaway winners.", ephemeral: true });
       }
 
       const giveawayId = interaction.customId.slice("giveaway_reroll:".length);
       const giveaway = giveaways.get(giveawayId);
       if (!giveaway || !giveaway.ended) {
-        return interaction.reply({ content: "This giveaway hasn't ended or is no longer available.", ephemeral: true });
+        return interaction.reply({ content: "<a:1511361949777137835:1560419589718806618>This giveaway hasn't ended or is no longer available.", ephemeral: true });
       }
 
       const previousWinners = new Set(giveaway.winners || []);
       const eligibleEntrants = [...giveaway.entrants].filter(id => !previousWinners.has(id));
       if (eligibleEntrants.length === 0) {
-        return interaction.reply({ content: "There are no eligible entrants left to reroll.", ephemeral: true });
+        return interaction.reply({ content: "<a:1511361949777137835:1560419589718806618>There are no eligible entrants left to reroll.", ephemeral: true });
       }
 
       const newWinner = eligibleEntrants[Math.floor(Math.random() * eligibleEntrants.length)];
