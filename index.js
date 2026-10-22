@@ -82,12 +82,12 @@
     const maxTimeout = 2_147_000_000;
     setTimeout(() => {
       if (Date.now() < giveaway.endsAt) scheduleGiveawayEnd(giveaway);
-      else finishGiveaway(giveaway.messageId);
+      else finishGiveaway(giveaway.id);
     }, Math.min(remaining, maxTimeout));
   }
 
-  async function finishGiveaway(messageId) {
-    const giveaway = giveaways.get(messageId);
+  async function finishGiveaway(giveawayId) {
+    const giveaway = giveaways.get(giveawayId);
     if (!giveaway || giveaway.ended) return;
     giveaway.ended = true;
 
@@ -107,12 +107,12 @@
       .setTimestamp();
 
     const channel = giveaway.channel;
-    const message = await channel.messages.fetch(messageId).catch(() => null);
+    const message = await channel.messages.fetch(giveaway.messageId).catch(() => null);
     if (message) {
       await message.edit({
         embeds: [embed],
         components: [new ActionRowBuilder().addComponents(
-          new ButtonBuilder().setCustomId(`giveaway_join:${messageId}`).setLabel("Giveaway Ended").setStyle(ButtonStyle.Secondary).setDisabled(true)
+          new ButtonBuilder().setCustomId(`giveaway_join:${giveawayId}`).setLabel("Giveaway Ended").setStyle(ButtonStyle.Secondary).setDisabled(true)
         )]
       }).catch(() => null);
       await channel.send({ content: winnerText, allowedMentions: { users: winners } }).catch(() => null);
@@ -223,9 +223,9 @@
 
       const args = message.content.trim().split(/\s+/);
       if (args[1]?.toLowerCase() === "end") {
-        const giveaway = giveaways.get(args[2]);
-        if (!giveaway || giveaway.ended) return message.reply("❌ Active giveaway not found. Use its giveaway message ID.");
-        await finishGiveaway(args[2]);
+        const entry = [...giveaways.entries()].find(([, giveaway]) => giveaway.messageId === args[2]);
+        if (!entry || entry[1].ended) return message.reply("❌ Active giveaway not found. Use its giveaway message ID.");
+        await finishGiveaway(entry[0]);
         return;
       }
 
@@ -243,26 +243,29 @@
         .setDescription(`**Prize:** ${prize}\n**Winners:** ${winnerCount}\n**Ends:** <t:${Math.floor(endsAt / 1000)}:R>\n**Entries:** 0\n\nClick the button below to enter!`)
         .setFooter({ text: `Hosted by ${message.author.username}` })
         .setTimestamp(endsAt);
-      const giveawayMessage = await message.channel.send({ embeds: [embed] });
+      const giveawayId = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
       const giveaway = {
+        id: giveawayId,
         channel: message.channel,
-        messageId: giveawayMessage.id,
+        messageId: null,
         prize,
         winnerCount,
         endsAt,
         entrants: new Set(),
         ended: false
       };
-      giveaways.set(giveawayMessage.id, giveaway);
-      await giveawayMessage.edit({
+      const giveawayMessage = await message.channel.send({
+        embeds: [embed],
         components: [new ActionRowBuilder().addComponents(
           new ButtonBuilder()
-            .setCustomId(`giveaway_join:${giveawayMessage.id}`)
+            .setCustomId(`giveaway_join:${giveawayId}`)
             .setLabel("Join Giveaway")
             .setEmoji("🎉")
             .setStyle(ButtonStyle.Success)
         )]
       });
+      giveaway.messageId = giveawayMessage.id;
+      giveaways.set(giveawayId, giveaway);
       scheduleGiveawayEnd(giveaway);
       await message.reply(`✅ Giveaway started. Message ID: \`${giveawayMessage.id}\`\nEnd early with: \`!giveaway end ${giveawayMessage.id}\``);
       return;
@@ -561,10 +564,10 @@
   // ================= INTERACTIONS =================
   client.on("interactionCreate", async (interaction) => {
     if (interaction.isButton() && interaction.customId.startsWith("giveaway_join:")) {
-      const messageId = interaction.customId.slice("giveaway_join:".length);
-      const giveaway = giveaways.get(messageId);
+      const giveawayId = interaction.customId.slice("giveaway_join:".length);
+      const giveaway = giveaways.get(giveawayId);
       if (!giveaway || giveaway.ended || Date.now() >= giveaway.endsAt) {
-        if (giveaway && !giveaway.ended) await finishGiveaway(messageId);
+        if (giveaway && !giveaway.ended) await finishGiveaway(giveawayId);
         return interaction.reply({ content: "This giveaway has ended.", ephemeral: true });
       }
 
