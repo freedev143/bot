@@ -102,7 +102,7 @@
       ? winners.map(id => `<@${id}>`).join(", ")
       : "No valid entries, so there are no winners.";
     const embed = new EmbedBuilder()
-      .setColor(0x000000)
+      .setColor(0xFF2B00)
       .setTitle("<a:709779986617335879:1562922743912079421> Giveaway Ended")
       .setDescription(`**Prize:** ${giveaway.prize}\n**Winner${winners.length === 1 ? "" : "s"}:** ${winnerText}\n**Entries:** ${giveaway.entrants.size}`)
       .setTimestamp();
@@ -153,7 +153,7 @@
       if (userData.count > 8) {
         await member.timeout(20 * 60 * 1000, "Raid/Spam").catch(() => null);
         await message.delete().catch(() => null);
-        const embed = new EmbedBuilder().setColor(0x000000).setTitle("Timed out!").setDescription("Stop raiding/spamming.").setThumbnail(botAvatar);
+        const embed = new EmbedBuilder().setColor(0xFF2B00).setTitle("Timed out!").setDescription("Stop raiding/spamming.").setThumbnail(botAvatar);
         await message.author.send({ embeds: [embed] }).catch(() => null);
         return;
       }
@@ -162,7 +162,7 @@
       if (linkRegex.test(message.content)) {
         await message.delete().catch(() => null);
         await member.timeout(15 * 60 * 1000, "Link - anti-raid").catch(() => null);
-        const embed = new EmbedBuilder().setColor(0x000000).setTitle("Links forbidden").setDescription("Any link = timeout.").setThumbnail(botAvatar);
+        const embed = new EmbedBuilder().setColor(0xFF2B00).setTitle("Links forbidden").setDescription("Any link = timeout.").setThumbnail(botAvatar);
         await message.author.send({ embeds: [embed] }).catch(() => null);
         return;
       }
@@ -170,7 +170,7 @@
       if (/injuries/i.test(message.content)) {
         await member.timeout(10 * 60 * 1000).catch(() => null);
         await message.delete().catch(() => null);
-        const embed = new EmbedBuilder().setColor(0x000000).setTitle("Timed out").setDescription("Stop 'injuries'.").setThumbnail(botAvatar);
+        const embed = new EmbedBuilder().setColor(0xFF2B00).setTitle("Timed out").setDescription("Stop 'injuries'.").setThumbnail(botAvatar);
         await message.author.send({ embeds: [embed] }).catch(() => null);
         return;
       }
@@ -182,7 +182,7 @@
         await message.delete().catch(() => null);
         const embed = new EmbedBuilder()
           .setColor(0xFF0000)
-          .setTitle("❌ Link Blocked!")
+          .setTitle("<a:737893758644912240:1562935720299991110> Link Blocked!")
           .setDescription("You can't send server invites or auth links here!")
           .setFooter({ text: `Requested by ${message.author.username}` });
         await message.channel.send({ embeds: [embed] }).then(msg => {
@@ -206,7 +206,7 @@
       await message.delete().catch(() => null);
       const errorEmbed = new EmbedBuilder()
         .setColor(0xFF0000)
-        .setTitle("❌ Wrong Channel!")
+        .setTitle("<a:737893758644912240:1562935720299991110> Wrong Channel!")
         .setDescription(`Don't try using commands here r3tard go to\n<#${COMMANDS_CHANNEL_ID}>`)
         .setFooter({ text: `Requested by ${message.author.username}` });
       
@@ -222,13 +222,13 @@
     // !giveaway <duration> <winner count> <prize> (staff only)
     if (message.content.startsWith("!giveaway")) {
       if (!hasStaffPermission(member)) {
-        return message.reply("❌ You don't have permission to use this command.");
+        return message.reply("<a:737893758644912240:1562935720299991110> You don't have permission to use this command.");
       }
 
       const args = message.content.trim().split(/\s+/);
       if (args[1]?.toLowerCase() === "end") {
         const entry = [...giveaways.entries()].find(([, giveaway]) => giveaway.messageId === args[2]);
-        if (!entry || entry[1].ended) return message.reply("❌ Active giveaway not found. Use its giveaway message ID.");
+        if (!entry || entry[1].ended) return message.reply("<a:737893758644912240:1562935720299991110> Active giveaway not found. Use its giveaway message ID.");
         await finishGiveaway(entry[0]);
         return;
       }
@@ -242,7 +242,7 @@
 
       const endsAt = Date.now() + duration;
       const embed = new EmbedBuilder()
-        .setColor(0x000000)
+        .setColor(0x05E85F)
         .setTitle("<a:709779986617335879:1562922743912079421> Giveaway")
         .setDescription(`**Prize:** ${prize}\n**Winners:** ${winnerCount}\n**Ends:** <t:${Math.floor(endsAt / 1000)}:R>\n**Entries:** 0\n\nClick the button below to enter!`)
         .setFooter({ text: `Hosted by ${message.author.username}` })
@@ -280,7 +280,7 @@
     if (message.content.startsWith("!stats")) {
       if (targetId === "1510663071109218315") {
         const embed1 = new EmbedBuilder()
-          .setColor(0x000000)
+          .setColor(0xFF2B00)
           .setTitle(`— <a:1463658185901608991:1532590641681404035>INJURIES STATS —`)
           .setThumbnail(targetUser.displayAvatarURL({ dynamic: true }))
           .setDescription(
@@ -316,7 +316,7 @@
       try {
         const res = await fetchWithTimeout(`https://api.injuries.to/v1/public/user?userId=${targetId}`);
         const data = await res.json();
-        if (!data.success || !data.Normal) return message.reply("❌ No stats found.");
+        if (!data.success || !data.Normal) return message.reply("<a:737893758644912240:1562935720299991110> No stats found.");
 
         const normal = data.Normal;
         const profile = data.Profile || {};
@@ -328,7 +328,7 @@
         const totalRobux = totalHits.Balance || normal.Highest?.Balance || 0;
 
         const embed1 = new EmbedBuilder()
-          .setColor(0x000000)
+          .setColor(0xFF2B00)
           .setTitle(`— <a:1463658185901608991:1532590641681404035>INJURIES STATS —`)
           .setThumbnail(targetUser.displayAvatarURL({ dynamic: true }))
           .setDescription(
@@ -344,7 +344,7 @@
           .setFooter({ text: ` • Requested by ${message.author.username}`, iconURL: message.author.displayAvatarURL({ dynamic: true }) });
 
         const embed2 = new EmbedBuilder()
-          .setColor(0x000000)
+          .setColor(0xFF2B00)
           .setImage("https://i.imgur.com/l6IkrrC.gif");
 
         await message.channel.send({
@@ -358,51 +358,51 @@
             )
           ]
         });
-      } catch (err) { console.error(err); message.reply("❌ API timeout.").catch(() => null); }
+      } catch (err) { console.error(err); message.reply("<a:737893758644912240:1562935720299991110> API timeout.").catch(() => null); }
     }
 
     // !purge
     if (message.content.startsWith("!purge")) {
       if (!hasStaffPermission(member)) {
-        return message.reply("❌ You don't have permission to use this command.");
+        return message.reply("<a:737893758644912240:1562935720299991110> You don't have permission to use this command.");
       }
 
       try {
         const fetched = await message.channel.messages.fetch({ limit: 100 });
         const deleted = await message.channel.bulkDelete(fetched, true);
         const embed = new EmbedBuilder()
-          .setColor(0x000000)
+          .setColor(0xFF2B00)
           .setTitle("Successfully purged")
           .setDescription(`Deleted ${deleted.size} messages`)
           .setImage(getRandomPurge())
           .setFooter({ text: "STERAX • Purge" });
         await message.channel.send({ embeds: [embed] });
       } catch (e) {
-        message.reply("Purge failed.").catch(() => null);
+        message.reply("<a:737893758644912240:1562935720299991110> Purge failed.").catch(() => null);
       }
     }
 
     // !fuck
     if (message.content.startsWith("!fuck")) {
       const mention = message.mentions.users.first();
-      if (!mention) return message.reply("❌ Mention a user!");
+      if (!mention) return message.reply("<a:737893758644912240:1562935720299991110> Mention a user!");
       
       if (mention.id === OWNER_ID) {
-        return message.reply("You can't fuck owner go fuck yourself!💔🥀");
+        return message.reply("<a:737893758644912240:1562935720299991110> You can't fuck owner go fuck yourself!💔🥀");
       }
       
       if (message.author.id === "1505715261087678635") {
-        return message.reply("U can't fuck nobody everyone broke yo ahh💔🥀");
+        return message.reply("<a:737893758644912240:1562935720299991110> U can't fuck nobody everyone broke yo ahh💔🥀");
       }
       
-      await message.channel.send({ embeds: [new EmbedBuilder().setColor(0x000000).setTitle(`Fucking ${mention.username}`).setDescription(`<@${mention.id}>`).setImage(getRandomFuck()).setFooter({ text: `Requested by ${message.author.username}` })] });
+      await message.channel.send({ embeds: [new EmbedBuilder().setColor(0xFF2B00).setTitle(`## Fucking ${mention.username}`).setDescription(`<@${mention.id}>`).setImage(getRandomFuck()).setFooter({ text: `Requested by ${message.author.username}` })] });
     }
 
     // !unhook
     if (message.content.startsWith("!unhook")) {
       const embed = new EmbedBuilder()
-        .setColor(0x000000)
-        .setTitle("— <a:why:1545850214064193576> UNHOOK TUTORIAL —")
+        .setColor(0xFF2B00)
+        .setTitle("### — <a:why:1545850214064193576> UNHOOK TUTORIAL —")
         .setDescription(`If your beams do not say **"INJURIES"** then you might be losing your beams.\nWatch the video below.`)
         .setImage("https://i.imgur.com/8IgDbSB.gif");
       const row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId("unhook_video").setLabel("Unhook").setStyle(ButtonStyle.Secondary));
@@ -412,24 +412,24 @@
     // !help
     if (message.content.startsWith("!help")) {
       const embed = new EmbedBuilder()
-        .setColor(0x000000)
-        .setTitle("— <a:why:1545850214064193576> HELP MENU —")
+        .setColor(0xFF2B00)
+        .setTitle("## — <a:why:1545850214064193576> HELP MENU —")
         .setDescription(
           `**Available Commands:**\n\n` +
           `**!stats [@user]**\n` +
-          `Provides the full stats of a user (hits, visits, clicks, biggest hits, RAP, Robux etc.)\n\n` +
+          `ᴘʀᴏᴠɪᴅᴇꜱ ᴛʜᴇ ꜰᴜʟʟ ꜱᴛᴀᴛꜱ ᴏꜰ ᴀ ᴜꜱᴇʀ (ʜɪᴛꜱ, ᴠɪꜱɪᴛꜱ, ᴄʟɪᴄᴋꜱ, ʙɪɢɢᴇꜱᴛ ʜɪᴛꜱ, ʀᴀᴘ, ʀᴏʙᴜx ᴇᴛᴄ.)\n\n` +
           `**!fuck @user**\n` +
-          `Sends a funny GIF message to the mentioned user.\n\n` +
+          `ꜱᴇɴᴅꜱ ᴀ ꜰᴜɴɴʏ ɢɪꜰ ᴍᴇꜱꜱᴀɢᴇ ᴛᴏ ᴛʜᴇ ᴍᴇɴᴛɪᴏɴᴇᴅ ᴜꜱᴇʀ.\n\n` +
           `**!purge**\n` +
-          `(Owner + Staff) Deletes the last 100 messages in the current channel.\n\n` +
-          `**!giveaway <duration> <winners> <prize>**\n` +
-          `(Owner + Staff) Starts a giveaway (example: !giveaway 1h 1 Nitro). Use !giveaway end <message ID> to end it early.\n\n` +
+          `(ᴏᴡɴᴇʀ + ꜱᴛᴀꜰꜰ) ᴅᴇʟᴇᴛᴇꜱ ᴛʜᴇ ʟᴀꜱᴛ 100 ᴍᴇꜱꜱᴀɢᴇꜱ ɪɴ ᴛʜᴇ ᴄᴜʀʀᴇɴᴛ ᴄʜᴀɴɴᴇʟ.\n\n` +
+          `**!giveaway**\n` +
+          `(ᴏᴡɴᴇʀ + ꜱᴛᴀꜰꜰ) ꜱᴛᴀʀᴛꜱ ᴀ ɢɪᴠᴇᴀᴡᴀʏ \n\n` +
           `**!unhook**\n` +
-          `Shows the unhook tutorial for beams (if beams don't say "INJURIES").\n\n` +
+          `ꜱʜᴏᴡꜱ ᴛʜᴇ ᴜɴʜᴏᴏᴋ ᴛᴜᴛᴏʀɪᴀʟ ꜰᴏʀ ʙᴇᴀᴍꜱ (ɪꜰ ʙᴇᴀᴍꜱ ᴅᴏɴ'ᴛ ꜱᴀʏ "ɪɴᴊᴜʀɪᴇꜱ").\n\n` +
           `**!check**\n` +
-          `Checks if the website is online/offline + browser compatibility (Chrome, Firefox, Opera etc.).\n\n` +
+          `ᴄʜᴇᴄᴋꜱ ɪꜰ ᴛʜᴇ ᴡᴇʙꜱɪᴛᴇ ɪꜱ ᴏɴʟɪɴᴇ/ᴏꜰꜰʟɪɴᴇ + ʙʀᴏᴡꜱᴇʀ ᴄᴏᴍᴘᴀᴛɪʙɪʟɪᴛʏ (ᴄʜʀᴏᴍᴇ, ꜰɪʀᴇꜰᴏx, ᴏᴘᴇʀᴀ ᴇᴛᴄ.).\n\n` +
           `**!create_ticket_panel**\n` +
-          `(Owner + Staff) Creates the ticket selection panel.`
+          `(ᴏᴡɴᴇʀ + ꜱᴛᴀꜰꜰ) ᴄʀᴇᴀᴛᴇꜱ ᴛʜᴇ ᴛɪᴄᴋᴇᴛ ꜱᴇʟᴇᴄᴛɪᴏɴ ᴘᴀɴᴇʟ.`
         )
         .setImage("https://i.imgur.com/y2D15VM.gif")
         .setFooter({ text: `Requested by ${message.author.username}` });
@@ -439,12 +439,12 @@
     // !create_ticket_panel
     if (message.content.startsWith("!create_ticket_panel")) {
       if (!hasStaffPermission(member)) {
-        return message.reply("❌ You don't have permission to use this command.");
+        return message.reply("<a:737893758644912240:1562935720299991110> You don't have permission to use this command.");
       }
 
       const embedMain = new EmbedBuilder()
-        .setColor(0x000000)
-        .setTitle(`—— <a:1463658185901608991:1532590641681404035>ꜱᴜᴘᴘᴏʀᴛ  ——`)
+        .setColor(0x0059FF)
+        .setTitle(`## —— <a:1463658185901608991:1532590641681404035>ꜱᴜᴘᴘᴏʀᴛ  ——`)
         .setDescription(`<a:1463658185901608991:1532590641681404035>ᴘʟᴇᴀꜱᴇ ᴄʜᴏᴏꜱᴇ ᴀ ʙᴜᴛᴛᴏɴ ʙᴇʟᴏᴡ ᴅᴇᴘᴇɴᴅɪɴɢ ᴏɴ ᴡʜᴀᴛ ᴛʏᴘᴇ ᴏꜰ ɪꜱꜱᴜᴇ ʏᴏᴜʀ ᴅᴇᴀʟɪɴɢ ᴡɪᴛʜ`)
         .setImage(TICKET_BANNER);
 
@@ -456,17 +456,17 @@
             {
               label: "Links",
               value: "links",
-              emoji: { id: "1532590641681404035", name: "1463658185901608991", animated: true }
+              emoji: { id: "1562922713662750760", name: "715186818831614093", animated: true }
             },
             {
               label: "Generator",
               value: "generator",
-              emoji: { id: "1532582407054688388", name: "cross101", animated: true }
+              emoji: { id: "1562922713662750760", name: "715186818831614093", animated: true }
             },
             {
               label: "Others",
               value: "others",
-              emoji: { id: "1532590616150671491", name: "1532377228237603057", animated: true }
+              emoji: { id: "1562922713662750760", name: "715186818831614093", animated: true }
             }
           ])
       );
@@ -476,7 +476,7 @@
 
     // !check
     if (message.content.startsWith("!check")) {
-      const checkingMsg = await message.channel.send({ embeds: [new EmbedBuilder().setColor(0x000000).setDescription("**Fetching status...**")] });
+      const checkingMsg = await message.channel.send({ embeds: [new EmbedBuilder().setColor(0xFF2B00).setDescription("**Fetching status...**")] });
 
       try {
         const start = Date.now();
@@ -485,7 +485,7 @@
 
         if (res.ok) {
           const onlineEmbed = new EmbedBuilder()
-            .setColor(0x00FF00)
+            .setColor(0x00FF04)
             .setAuthor({ name: "Injuries Status", iconURL: "https://cdn3.emoji.gg/emojis/49198-online1.gif" })
             .setTitle("Injuries are online")
             .setThumbnail("https://cdn3.emoji.gg/emojis/49198-online1.gif")
@@ -506,7 +506,7 @@
         } else throw new Error("Not OK");
       } catch (err) {
         const offlineEmbed = new EmbedBuilder()
-          .setColor(0xFF0000)
+          .setColor(0xFF2B00)
           .setAuthor({ name: "Injuries Status", iconURL: "https://cdn3.emoji.gg/emojis/9596-offline.gif" })
           .setTitle("<:1528433695957192744:1541665384292417546>injuries offline")
           .setThumbnail("https://cdn3.emoji.gg/emojis/9596-offline.gif")
@@ -528,8 +528,8 @@
       // Server welcome
       if (welcomeChannel) {
         const welcomeMain = new EmbedBuilder()
-          .setColor(0x000000)
-          .setTitle(`<a:why:1545850214064193576> Welcome to STERAX!!`)
+          .setColor(0x0033FF)
+          .setTitle(`## <a:why:1545850214064193576> Welcome to STERAX!!`)
           .setDescription(
             `Read\n` +
             `<#1525376533277970433>\n\n` +
@@ -541,14 +541,14 @@
           .setImage(WELCOME_BANNER);
 
         await welcomeChannel.send({
-          content: `<@${member.id}> has joined the server!`,
+          content: `<@${member.id}> 𝙝𝙖𝙨 𝙟𝙤𝙞𝙣𝙚𝙙 𝙩𝙝𝙚 𝙨𝙚𝙧𝙫𝙚𝙧!<a:5330redcrown:1562939138255098007>`,
           embeds: [welcomeMain]
         });
       }
 
       // DM welcome (silent try)
       const dmEmbed = new EmbedBuilder()
-        .setColor(0x000000)
+        .setColor(0x0033FF)
         .setTitle("Welcome to STERAX")
         .setDescription(
           `**${member.user.username}**\n\n` +
@@ -577,7 +577,7 @@
       }
 
       if (giveaway.entrants.has(interaction.user.id)) {
-        return interaction.reply({ content: "You're already entered in this giveaway.", ephemeral: true });
+        return interaction.reply({ content: "<a:715186818831614093:1562922713662750760>You're already entered in this giveaway.", ephemeral: true });
       }
 
       giveaway.entrants.add(interaction.user.id);
@@ -589,13 +589,13 @@
 
     if (interaction.isButton() && interaction.customId.startsWith("giveaway_reroll:")) {
       if (!hasStaffPermission(interaction.member)) {
-        return interaction.reply({ content: "<a:engkengot:1541662301306757181> Only staff can reroll giveaway winners.", ephemeral: true });
+        return interaction.reply({ content: "<a:737893758644912240:1562935720299991110> Only staff can reroll giveaway winners.", ephemeral: true });
       }
 
       const giveawayId = interaction.customId.slice("giveaway_reroll:".length);
       const giveaway = giveaways.get(giveawayId);
       if (!giveaway || !giveaway.ended) {
-        return interaction.reply({ content: "<a:1511361949777137835:1560419589718806618>This giveaway hasn't ended or is no longer available.", ephemeral: true });
+        return interaction.reply({ content: "<a:737893758644912240:1562935720299991110>This giveaway hasn't ended or is no longer available.", ephemeral: true });
       }
 
       const previousWinners = new Set(giveaway.winners || []);
@@ -640,12 +640,12 @@
       await interaction.reply({ content: `Ticket created: ${ticketChannel}`, ephemeral: true });
 
       const ticketMain = new EmbedBuilder()
-        .setColor(0x000000)
+        .setColor(0xFF2B00)
         .setTitle(`— <a:1463658185901608991:1532590641681404035> TICKET CREATED —`)
         .setDescription(
           `**Welcome** <@${member.id}> !\n\n` +
-          `Please describe what type of issue you have.\n` +
-          `Staff will be with you shortly.`
+          `ᴘʟᴇᴀꜱᴇ ᴅᴇꜱᴄʀɪʙᴇ ᴡʜᴀᴛ ᴛʏᴘᴇ ᴏꜰ ɪꜱꜱᴜᴇ ʏᴏᴜ ʜᴀᴠᴇ.\n` +
+          `ꜱᴛᴀꜰꜰ ᴡɪʟʟ ʙᴇ ᴡɪᴛʜ ʏᴏᴜ ꜱʜᴏʀᴛʟʏ.`
         )
         .setImage(TICKET_CREATED);
 
@@ -723,7 +723,7 @@
         }
       }
     } catch (err) { 
-      console.error("❌ Auto-purge error:", err); 
+      console.error("<<a:737893758644912240:1562935720299991110> Auto-purge error:", err); 
     }
   }
 
