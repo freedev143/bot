@@ -96,6 +96,7 @@
     while (entrants.length > 0 && winners.length < giveaway.winnerCount) {
       winners.push(entrants.splice(Math.floor(Math.random() * entrants.length), 1)[0]);
     }
+    giveaway.winners = winners;
 
     const winnerText = winners.length
       ? winners.map(id => `<@${id}>`).join(", ")
@@ -111,9 +112,12 @@
     if (message) {
       await message.edit({
         embeds: [embed],
-        components: [new ActionRowBuilder().addComponents(
-          new ButtonBuilder().setCustomId(`giveaway_join:${giveawayId}`).setLabel("Giveaway Ended").setStyle(ButtonStyle.Secondary).setDisabled(true)
-        )]
+        components: [
+          new ActionRowBuilder().addComponents(
+            new ButtonBuilder().setCustomId(`giveaway_join:${giveawayId}`).setLabel("Giveaway Ended").setStyle(ButtonStyle.Secondary).setDisabled(true),
+            new ButtonBuilder().setCustomId(`giveaway_reroll:${giveawayId}`).setLabel("Reroll Winner").setEmoji("🔄").setStyle(ButtonStyle.Primary)
+          )
+        ]
       }).catch(() => null);
       await channel.send({ content: winnerText, allowedMentions: { users: winners } }).catch(() => null);
     }
@@ -259,7 +263,7 @@
         components: [new ActionRowBuilder().addComponents(
           new ButtonBuilder()
             .setCustomId(`giveaway_join:${giveawayId}`)
-            .setLabel("Join Giveaway")
+            .setLabel("Enter Giveaway")
             .setEmoji("🎉")
             .setStyle(ButtonStyle.Success)
         )]
@@ -580,6 +584,35 @@
       updatedEmbed.setDescription(updatedEmbed.data.description.replace(/\*\*Entries:\*\* \d+/, `**Entries:** ${giveaway.entrants.size}`));
       await interaction.message.edit({ embeds: [updatedEmbed] }).catch(() => null);
       return interaction.reply({ content: "✅ You're entered in the giveaway!", ephemeral: true });
+    }
+
+    if (interaction.isButton() && interaction.customId.startsWith("giveaway_reroll:")) {
+      if (!hasStaffPermission(interaction.member)) {
+        return interaction.reply({ content: "❌ Only staff can reroll giveaway winners.", ephemeral: true });
+      }
+
+      const giveawayId = interaction.customId.slice("giveaway_reroll:".length);
+      const giveaway = giveaways.get(giveawayId);
+      if (!giveaway || !giveaway.ended) {
+        return interaction.reply({ content: "This giveaway hasn't ended or is no longer available.", ephemeral: true });
+      }
+
+      const previousWinners = new Set(giveaway.winners || []);
+      const eligibleEntrants = [...giveaway.entrants].filter(id => !previousWinners.has(id));
+      if (eligibleEntrants.length === 0) {
+        return interaction.reply({ content: "There are no eligible entrants left to reroll.", ephemeral: true });
+      }
+
+      const newWinner = eligibleEntrants[Math.floor(Math.random() * eligibleEntrants.length)];
+      giveaway.winners.push(newWinner);
+      const embed = EmbedBuilder.from(interaction.message.embeds[0]);
+      const winnerText = giveaway.winners.map(id => `<@${id}>`).join(", ");
+      embed.setDescription(embed.data.description.replace(/\*\*Winners?:\*\* .+/, `**Winners:** ${winnerText}`));
+      await interaction.message.edit({ embeds: [embed] });
+      return interaction.reply({
+        content: `🔄 Rerolled! New winner: <@${newWinner}>`,
+        allowedMentions: { users: [newWinner] }
+      });
     }
 
     if (interaction.isStringSelectMenu() && interaction.customId === "ticket_select") {
