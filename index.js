@@ -209,7 +209,7 @@
         .setTitle("<a:737893758644912240:1562935720299991110> Wrong Channel!")
         .setDescription(`Don't try using commands here go to\n<#${COMMANDS_CHANNEL_ID}>`)
         .setFooter({ text: `Requested by ${message.author.username}` });
-      
+
       await message.channel.send({ embeds: [errorEmbed] }).then(msg => {
         setTimeout(() => msg.delete().catch(() => null), 5000);
       }).catch(() => null);
@@ -386,15 +386,15 @@
     if (message.content.startsWith("!fuck")) {
       const mention = message.mentions.users.first();
       if (!mention) return message.reply("<a:737893758644912240:1562935720299991110> Mention a user!");
-      
+
       if (mention.id === OWNER_ID) {
         return message.reply("<a:737893758644912240:1562935720299991110> You can't fuck owner go fuck yourself!💔🥀");
       }
-      
+
       if (message.author.id === "1505715261087678635") {
         return message.reply("<a:737893758644912240:1562935720299991110> U can't fuck nobody everyone broke yo ahh💔🥀");
       }
-      
+
       await message.channel.send({ embeds: [new EmbedBuilder().setColor(0x04010A).setTitle(` Fucking ${mention.username}`).setDescription(`<@${mention.id}>`).setImage(getRandomFuck()).setFooter({ text: `Requested by ${message.author.username}` })] });
     }
 
@@ -524,7 +524,7 @@
   client.on("guildMemberAdd", async (member) => {
     try {
       const welcomeChannel = member.guild.channels.cache.get(WELCOME_CHANNEL_ID);
-      
+
       // Server welcome
       if (welcomeChannel) {
         const welcomeMain = new EmbedBuilder()
@@ -687,7 +687,7 @@
             let fetched;
             let totalDeleted = 0;
             let hasMore = true;
-            
+
             while (hasMore) {
               try {
                 fetched = await channel.messages.fetch({ limit: 100 }).catch(() => null);
@@ -695,25 +695,25 @@
                   hasMore = false;
                   break;
                 }
-                
+
                 const toDelete = fetched.filter(m => m.id !== PROTECTED_MESSAGE_ID);
                 if (toDelete.size > 0) {
                   await channel.bulkDelete(toDelete, true).catch(() => null);
                   totalDeleted += toDelete.size;
                   console.log(`🗑️ Deleted ${toDelete.size} messages in ${channel.name} (Total: ${totalDeleted})`);
                 }
-                
+
                 if (fetched.size < 100) {
                   hasMore = false;
                 }
-                
+
                 await new Promise(resolve => setTimeout(resolve, 1000));
               } catch (err) {
                 console.error("Error in auto-purge batch:", err);
                 hasMore = false;
               }
             }
-            
+
             if (totalDeleted > 0) {
               console.log(`✅ Auto-purge completed: Deleted ${totalDeleted} messages total in ${channel.name}`);
             } else {
